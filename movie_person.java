@@ -75,7 +75,7 @@ public class movie_person extends HttpServlet {
 
       // Create a Statement
       pstmt = conn.prepareStatement("insert into movie " +
-        "(m_id, m_title) values (?, ?)");
+        "(movieID, movieTitle, personID, roleName, characterName) values (?, ?, ?, ?, ?)");
     }
     catch (Exception ex) {
       ex.printStackTrace();
