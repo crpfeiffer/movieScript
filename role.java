@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.*;
 
-public class movie_person extends HttpServlet {
+public class Role extends HttpServlet {
   // Use a prepared statement to store a student into the database
   private PreparedStatement pstmt;
 
@@ -22,25 +22,21 @@ public class movie_person extends HttpServlet {
     PrintWriter out = response.getWriter();
 
     // Obtain parameters from the client
-    String movieID = request.getParameter("movieID");
-    String movieTitle = request.getParameter("movieTitle");
-    String personID = request.getParameter("personID");
+    String roleID = request.getParameter("movieID");
     String roleName = request.getParameter("roleName");
-    String characterName = request.getParameter("characterName");
-
 
     try {
 
-		//out.println("First Name: " + firstName );
-      if (movieID.length() == 0 || movieTitle.length() == 0 || personID.length() == 0 || roleName.length() == 0 || characterName.length() == 0) {
+		//out.println("roleID, roleName" );
+      if (roleID.length() == 0 || roleName.length() == 0) {
         out.println("All fields are required");
         return; // End the method
       }
 
-      storeRole(movieID, movieTitle, personID, roleName, characterName);
+      storeRole(roleID, roleName);
 
-      out.println(personID + " " + movieID +
-        "are now connected in the database");
+      out.println(roleID + " " + roleName +
+        "is now in the database");
     }
     catch(Exception ex) {
       out.println("\n Error: " + ex.getMessage());
@@ -74,8 +70,8 @@ public class movie_person extends HttpServlet {
         (url,user, password);
 
       // Create a Statement
-      pstmt = conn.prepareStatement("insert into movie " +
-        "(movieID, movieTitle, personID, roleName, characterName) values (?, ?, ?, ?, ?)");
+      pstmt = conn.prepareStatement("insert into Role " +
+        "(roleID, roleName) values (?, ?)");
     }
     catch (Exception ex) {
       ex.printStackTrace();
@@ -83,12 +79,9 @@ public class movie_person extends HttpServlet {
   }
 
   /** Store a student record to the database */
-  private void storeStudent(String movieID, String movieTitle, String personID, String roleName, String characterName) throws SQLException {
-    pstmt.setString(1, movieID);
-    pstmt.setString(2, movieTitle);
-    pstmt.setString(parameterIndex:3, personID);
-    pstmt.setString(parameterIndex:4, roleName);
-    pstmt.setString(paramenterIndex:5, characterName);
+  private void storeRole(String roleID, String roleName) throws SQLException {
+    pstmt.setString(1, roleID);
+    pstmt.setString(parameterIndex:2, roleName);
 
     pstmt.executeUpdate();
   }

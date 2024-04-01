@@ -1,0 +1,90 @@
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.*;
+
+public class Role extends HttpServlet {
+  // Use a prepared statement to store a student into the database
+  private PreparedStatement pstmt;
+
+  /** Initialize global variables */
+  public void init() throws ServletException {
+    initializeJdbc();
+  }
+
+  /** Process the HTTP Post request */
+  public void doPost(HttpServletRequest request, HttpServletResponse
+      response) throws ServletException, IOException {
+    response.setContentType("text/html");
+    PrintWriter out = response.getWriter();
+
+    // Obtain parameters from the client
+    String movieID = request.getParameter("movieID");
+    String personID = request.getParameter("personID");
+    String roleID = request.getParameter("roleID");
+
+    try {
+
+		//out.println("roleID, roleName" );
+      if (movieID.length() == 0 || personID.length() == 0 || roleID.length() == 0) {
+        out.println("All fields are required");
+        return; // End the method
+      }
+
+      storeConnection(movieID, personID, roleID);
+
+      out.println(movieID + " " + personID + roleID +
+        "is now in the database");
+    }
+    catch(Exception ex) {
+      out.println("\n Error: " + ex.getMessage());
+    }
+    finally {
+      out.close(); // Close stream
+    }
+  }
+
+  /** Initialize database connection */
+  private void initializeJdbc() {
+    try {
+      // Declare driver and connection string
+     // String driver = "sun.jdbc.odbc.JdbcOdbcDriver";
+     // String connectionString = "jdbc:odbc:exampleMDBDataSource";
+      // For MySQL
+      // String driver = "com.mysql.jdbc.Driver";
+      // String connectionString = "jdbc:mysql://localhost/test";
+      // For Oracle
+       String driver = "oracle.jdbc.driver.OracleDriver";
+       
+      // Load the driver
+      Class.forName(driver);
+
+    String url = "jdbc:oracle:thin:@127.0.0.1:1521:orcl";
+    String user = "project";
+    String password = "project";
+
+      // Connect to the sample database
+      Connection conn = DriverManager.getConnection
+        (url,user, password);
+
+      // Create a Statement
+      pstmt = conn.prepareStatement("insert into Role " +
+        "(movieID, personID, roleID) values (?, ?, ?)");
+    }
+    catch (Exception ex) {
+      ex.printStackTrace();
+    }
+  }
+
+  /** Store a student record to the database */
+  private void storeRole(String movieID, String personID, String roleID) throws SQLException {
+    pstmt.setString(1, movieID);
+    pstmt.setString(parameterIndex:2, personID);
+    pstmt.setString(parameterIndex:2, roleID);
+
+    pstmt.executeUpdate();
+  }
+}
