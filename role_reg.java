@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.*;
 
-public class Role extends HttpServlet {
+public class role_reg extends HttpServlet {
   // Use a prepared statement to store a student into the database
   private PreparedStatement pstmt;
 
