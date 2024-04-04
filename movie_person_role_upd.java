@@ -3,7 +3,7 @@ import javax.servlet.http.*;
 import java.io.*;
 import java.sql.*;
 
-public class role_upd extends HttpServlet 
+public class movie_person_role_upd extends HttpServlet 
 {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException,IOException
@@ -13,13 +13,15 @@ public class role_upd extends HttpServlet
 			String query="";        
 			Connection con=null; 
           
-            String roleID = request.getParameter("roleID");
+            String roleID = request.getParameter("movieID");
+			String roleName = request.getParameter("personID");
+			String roleName = request.getParameter("roleID");
 			String roleName = request.getParameter("roleName");
 
 		try
 		{			
             DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver()); 
-            con = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:orcl", "project", "project");
+            con = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:orcl", "CSI3450", "AryaMani1");
 	       	System.out.println("Congratulations! You are connected successfully.");      
      	}
         catch(SQLException e)
@@ -28,7 +30,7 @@ public class role_upd extends HttpServlet
 		}
 		catch(Exception e) 
 		{
-			System.err.println("Exception while loading  driver");		
+			System.err.println("Exception while loading driver");		
 		}
 	    try 
 		{
@@ -50,7 +52,7 @@ public class role_upd extends HttpServlet
   			e.printStackTrace();
 		}
 		
-		query = "update  movie set roleID = '"+roleID+"', roleName = '"+roleName+";
+		query = "update movie_person_role_update set movieID = '"+movieID+"', personID = '"+personID+"' , roleID = '"+roleID+"' , roleName = '"+roleName+";
 		
 		out.println("<html><head><title>Role has been updtated</title>");	 
 		out.println("</head><body>");

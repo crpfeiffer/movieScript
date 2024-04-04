@@ -3,7 +3,7 @@ import javax.servlet.http.*;
 import java.io.*;
 import java.sql.*;
 
-public class role_del extends HttpServlet 
+public class movie_person_role_del extends HttpServlet 
 {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException,IOException
@@ -13,13 +13,15 @@ public class role_del extends HttpServlet
 			String query="";        
 			Connection con=null; 
           
-            String m_id = request.getParameter("roleID");
-            String m_title = request.getParameter("roleName");
+            String movieID = request.getParameter("movieID");
+            String personID = request.getParameter("personID");
+			String roleID = request.getParameter("roleID");
+			String roleName = request.getParameter("roleName");
 
 		try
 		{			
             DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver()); 
-            con = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:orcl", "project", "project");
+            con = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:orcl", "CSI3450", "AryaMani1");
 	       	System.out.println("Congratulations! You are connected successfully.");      
      	}
         catch(SQLException e)
@@ -50,7 +52,7 @@ public class role_del extends HttpServlet
   			e.printStackTrace();
 		}
 		
-		query = "delete from role where roleID = '"+roleID+"' or roleName = '"+roleName+"'";
+		query = "delete from role where movieID = '"+movieID+"' or personID = '"+personID+"' roleID = '"+roleID+"' roleName = '"+roleName+"'";
 		
 		out.println("<html><head><title>Movie has been deleted</title>");	 
 		out.println("</head><body>");

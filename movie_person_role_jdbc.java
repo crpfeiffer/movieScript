@@ -1,4 +1,4 @@
-public class Role extends HttpServlet {
+public class movie_person_role_jdbc extends HttpServlet {
 
     // PreparedStatement for retrieving roles
     private PreparedStatement pstmtSelect;
@@ -27,11 +27,13 @@ public class Role extends HttpServlet {
           int retrievedMovieID = rs.getInt("movieID");
           int retrievedPersonID = rs.getInt("personID");
           int retrievedRoleID = rs.getInt("roleID");
+          int retrievedRoleID = rs.getInt("roleName");
   
           out.println("<tr>");
-          out.println("<td>" + retrievedMovieID + "</td>");
-          out.println("<td>" + retrievedPersonID + "</td>");
-          out.println("<td>" + retrievedRoleID + "</td>");
+          out.println("<td>" + retrievedmovieID + "</td>");
+          out.println("<td>" + retrievedpersonID + "</td>");
+          out.println("<td>" + retrievedroleID + "</td>");
+          out.println("<td>" + retrievedroleName + "</td>");
           out.println("</tr>");
         }
   
@@ -48,7 +50,7 @@ public class Role extends HttpServlet {
   
       try {
         // Prepare statement for selecting roles
-        pstmtSelect = conn.prepareStatement("SELECT r.movieID, r.personID, r.roleID FROM Role r");
+        pstmtSelect = conn.prepareStatement("SELECT movieID, personID, roleID, roleName FROM Role");
       } catch (Exception ex) {
         ex.printStackTrace();
       }

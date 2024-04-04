@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.*;
 
-public class role_reg extends HttpServlet {
+public class movie_person_role_reg extends HttpServlet {
   // Use a prepared statement to store a student into the database
   private PreparedStatement pstmt;
 
@@ -22,20 +22,22 @@ public class role_reg extends HttpServlet {
     PrintWriter out = response.getWriter();
 
     // Obtain parameters from the client
-    String roleID = request.getParameter("movieID");
+    String movieID = request.getParameter("movieID");
+    String personID = request.getParameter("personID");
+    String roleID = request.getParameter("roleID");
     String roleName = request.getParameter("roleName");
 
     try {
 
-		//out.println("roleID, roleName" );
-      if (roleID.length() == 0 || roleName.length() == 0) {
+		//out.println("movieID, personID, roleID, roleName" );
+      if (movieID.length() == 0 || personID.length() == 0 roleID.length() == 0 ||roleName.length() == 0) {
         out.println("All fields are required");
         return; // End the method
       }
 
-      storeRole(roleID, roleName);
+      storeRole(movieID, personID, roleID, roleName);
 
-      out.println(roleID + " " + roleName +
+      out.println(movieID + " " + personID + " " + roleID + " " + roleName
         "is now in the database");
     }
     catch(Exception ex) {
@@ -62,8 +64,8 @@ public class role_reg extends HttpServlet {
       Class.forName(driver);
 
     String url = "jdbc:oracle:thin:@127.0.0.1:1521:orcl";
-    String user = "project";
-    String password = "project";
+    String user = "CSI3450";
+    String password = "AryaMani1";
 
       // Connect to the sample database
       Connection conn = DriverManager.getConnection
@@ -79,8 +81,10 @@ public class role_reg extends HttpServlet {
   }
 
   /** Store a student record to the database */
-  private void storeRole(String roleID, String roleName) throws SQLException {
-    pstmt.setString(1, roleID);
+  private void storeRole(String movieID, String personID, String roleID, String roleName) throws SQLException {
+    pstmt.setString(1, movieID);
+    pstmt.setString(parameterIndex:2, personID);
+    pstmt.setString(parameterIndex:2, roleID);
     pstmt.setString(parameterIndex:2, roleName);
 
     pstmt.executeUpdate();
