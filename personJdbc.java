@@ -1,106 +1,133 @@
-import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import java.io.*;
 import java.sql.*;
 
-public class personJdbc extends HttpServlet{
+public class personJdbc extends HttpServlet 
+{
     public void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
+        throws ServletException, IOException
+    {        
         Statement state4 = null;
         ResultSet result = null;
-        String query="";
-        Connection con=null;
+        String query="";        
+        Connection con=null; 
+
+        String personID = request.getParameter("personID");
+        String personName = request.getParameter("personName");
+        String personGender = request.getParameter("personGender");
+        String personDateOfBirth = request.getParameter("personDateOfBirth");
 
         try
-        {
-            DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
+        { 
+            DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver()); 
             con = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:orcl", "project", "project");
-            System.out.println("Congratulations! You are connected successfully.");
+            System.out.println("Congratulations! You are connected successfully.");      
         }
         catch(SQLException e)
-        {
-            System.out.println("Error: "+e);
+        { 
+            System.out.println("Error: "+e); 
         }
-        catch(Exception e)
+        catch(Exception e) 
         {
-            System.err.println("Exception while loading  driver");
+            System.err.println("Exception while loading driver"); 
         }
-        try
+        try 
         {
             state4 = con.createStatement();
-        }
-        catch (SQLException e)
+        } 
+        catch (SQLException e) 
         {
-            System.err.println("SQLException while creating statement");
+            System.err.println("SQLException while creating statement"); 
         }
-
+        
         response.setContentType("text/html");
         PrintWriter out = null ;
         try
         {
             out =  response.getWriter();
         }
-        catch (IOException e)
+        catch (IOException e) 
         {
             e.printStackTrace();
         }
+        
+        //query filtering stuff
+        query = "select personID, personName, personGender, personDateOfBirth from PERSON where 1=1";
 
-        query = "select personName, personGender, personDateOfBirth, personSalary from person";
+        if(personID != null && !personID.isEmpty()) {
+            query += " AND personID = " + personID;
+        }
 
-        out.println("<html><head><title>person Table Report</title>");
+        if(personName != null && !personName.isEmpty()) {
+            query += " AND personName LIKE '%" + personName + "%'";
+        }
+
+        out.println("<html><head><title>Person Table Report</title>"); 
+        out.println("<style>");
+        out.println("table {width: 100%; border-collapse: collapse;}");
+        out.println("th, td {border: 1px solid black; padding: 8px; text-align: left;}");
+        out.println("th {background-color: #cccccc;}");
+        out.println("</style>");
         out.println("</head><body>");
-
-        out.print( "<br /><b><center><font color=\"RED\"><H2>person Table Report</H2></font>");
-        out.println( "</center><br />" );
-        try
-        {
+        
+        out.println("<h2>Person Table Report</h2>");
+        out.println("<form action=\"personJdbc\" method=\"get\">");
+        out.println("Person ID: <input type=\"text\" name=\"personID\" value=\"" + (personID != null ? personID : "") + "\"> <br>");
+        out.println("Person Name: <input type=\"text\" name=\"personName\" value=\"" + (personName != null ? personName : "") + "\"> <br>");
+        out.println("Gender: <input type=\"text\" name=\"personGender\" value=\"" + (personGender != null ? personGender : "") + "\"> <br>");
+        out.println("Date of Birth: <input type=\"text\" name=\"personDateOfBirth\" value=\"" + (personDateOfBirth != null ? personDateOfBirth : "") + "\"> <br>");
+        out.println("<input type=\"submit\" value=\"Search\">");
+        out.println("</form>");
+        
+        try 
+        { 
             result=state4.executeQuery(query);
         }
-        catch (SQLException e)
+        catch (SQLException e) 
         {
-            System.err.println("SQLException while executing SQL Statement.");
-        }
-        out.println("<center><table border=\"1\">");
-        out.println("<tr BGCOLOR=\"#cccccc\">");
-        out.println("<td align = \"justify\"><font face =\"times new roman\"  size=\"4pt\">Title</td>");
-        out.println("<td align = \"justify\"><font face =\"times new roman\"  size=\"4pt\">Release Date</td>");
-        out.println("<td align = \"justify\"><font face =\"times new roman\"  size=\"4pt\">Duration</td>");
-        out.println("<td align = \"justify\"><font face =\"times new roman\"  size=\"4pt\">Category</td>");
-        out.println("<td align = \"justify\"><font face =\"times new roman\"  size=\"4pt\">Rating</td>");
-        out.println("</tr>");
-        try
-        {
-            while(result.next())
-            {
-                out.println("<tr>");
-                out.println("     <td align = \"justify\"><font face =\"times new roman\"  size=\"4pt\">"+result.getString(1)+"</td>");
-                out.println("     <td align = \"justify\"><font face =\"times new roman\"  size=\"4pt\">"+result.getString(2)+"</td>");
-                out.println("     <td align = \"justify\"><font face =\"times new roman\"  size=\"4pt\">"+result.getString(3)+"</td>");
-                out.println("     <td align = \"justify\"><font face =\"times new roman\"  size=\"4pt\">"+result.getString(4)+"</td>");
-                out.println("     <td align = \"justify\"><font face =\"times new roman\"  size=\"4pt\">"+result.getString(5)+"</td>");
-                out.println("</tr>");
-            }
-        }
-        catch (SQLException e)
-        {
-            System.out.println("ResultSet is not connected");
+            System.err.println("SQLException while executing SQL Statement."); 
         }
 
-        out.println("</table></CENTER>");
-        try
+        out.println("<table>"); 
+        out.println("<tr>");
+        out.println("<th>Person ID</th>");
+        out.println("<th>Name</th>");
+        out.println("<th>Gender</th>");
+        out.println("<th>Date of Birth</th>");
+        out.println("</tr>");
+
+        try 
+        { 
+            while(result.next()) 
+            { 
+                out.println("<tr>");
+                out.println("<td>" + result.getString(1) + "</td>");
+                out.println("<td>" + result.getString(2) + "</td>");
+                out.println("<td>" + result.getString(3) + "</td>");
+                out.println("<td>" + result.getString(4) + "</td>");
+                out.println("</tr>");
+            } 
+        }
+        catch (SQLException e) 
         {
-            result.close();
-            state4.close();
+            System.out.println("ResultSet is not connected"); 
+        }
+
+        out.println("</table>");
+        
+        try 
+        { 
+            result.close(); 
+            state4.close();     
             con.close();
             System.out.println("Connection is closed successfully.");
         }
-        catch (SQLException e)
+        catch (SQLException e) 
         {
-            e.printStackTrace();
+            e.printStackTrace();    
         }
 
         out.println("</body></html>");
-    }
+    } 
 }
